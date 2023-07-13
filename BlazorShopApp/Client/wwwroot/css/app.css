@@ -11,9 +11,7 @@ h1:focus {
 a, .btn-link {
     color: #0071c1;
 }
-.price {
-    color: green;
-}
+
 .btn-primary {
     color: #fff;
     background-color: #1b6ec2;
@@ -64,3 +62,16 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+.price {
+    color: green;
+}
+
+.media {
+    display: flex;
+    align-items: flex-start;
+}
+
+.media-body {
+    flex: 1;
+}

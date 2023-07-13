@@ -6,7 +6,7 @@
 
 @if (product is null)
 {
-    <span>Loading...</span>
+    <span>@message</span>
 }
 else
 {
@@ -25,11 +25,23 @@ else
 
 @code {
     private Product? product = null;
+    private string message = string.Empty;
     [Parameter]
     public int Id { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
-        product = ProductService.Products.Find(x => x.Id == Id);
+        message = "fetching product";
+
+        var result = await ProductService.GetProduct(Id);
+
+        if (!result.Success)
+        {
+            message = "Oops, that product is currently unavailable";
+        }
+        else
+        {
+            product = result.Data;
+        }
     }
 }
