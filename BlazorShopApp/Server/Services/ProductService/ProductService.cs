@@ -16,7 +16,11 @@ namespace BlazorShopApp.Server.Services.ProductService
         public async Task<ServiceResponse<Product>> GetProductAsync(int productId)
         {
             var response = new ServiceResponse<Product>();
-            var product = await _dataContext.Products.FindAsync(productId);
+            var product = await _dataContext.Products
+                .Include(x => x.Variants)
+                .ThenInclude(x=> x.ProductType)
+                .FirstOrDefaultAsync(x=> x.Id == productId);
+
             if (product is null)
             {
                 response.Success = false;
@@ -34,7 +38,9 @@ namespace BlazorShopApp.Server.Services.ProductService
         {
             var response = new ServiceResponse<List<Product>>()
             {
-                Data = await _dataContext.Products.ToListAsync()
+                Data = await _dataContext.Products
+                .Include(x => x.Variants)
+                .ToListAsync()
             };
 
             return response;
@@ -44,7 +50,10 @@ namespace BlazorShopApp.Server.Services.ProductService
         {
             var response = new ServiceResponse<List<Product>>
             {
-                Data = await _dataContext.Products.Where(x => x.Category.Url.ToLower() == url.ToLower()).ToListAsync()
+                Data = await _dataContext.Products
+                .Where(x => x.Category.Url.ToLower() == url.ToLower())
+                .Include(_ => _.Variants)
+                .ToListAsync()
             };
 
             return response;
