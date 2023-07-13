@@ -1,4 +1,5 @@
 using BlazorShopApp.Server.Data;
+using BlazorShopApp.Server.Services.ProductService;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,8 @@ builder.Services.AddDbContext<DataContext>(options => {
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+// DI Registrations
+builder.Services.AddScoped<IProductService, ProductService>();
 var app = builder.Build();
 
 app.UseSwaggerUI();
