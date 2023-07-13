@@ -13,6 +13,23 @@ namespace BlazorShopApp.Server.Services.ProductService
             _dataContext = dataContext;
         }
 
+        public async Task<ServiceResponse<Product>> GetProductAsync(int productId)
+        {
+            var response = new ServiceResponse<Product>();
+            var product = await _dataContext.Products.FindAsync(productId);
+            if (product is null)
+            {
+                response.Success = false;
+                response.Message = "Sorry, this product is currently unavailable";
+            }
+            else
+            {
+                response.Data = product;
+            }
+
+            return response;
+        }
+
         public async Task<ServiceResponse<List<Product>>> GetProductsAsync()
         {
             var response = new ServiceResponse<List<Product>>()

@@ -18,15 +18,22 @@ namespace BlazorShopApp.Server.Controllers
             _productService = productService;
         }
 
-       
+
 
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<List<Product>>>> GetProducts()
         {
             var products = await _productService.GetProductsAsync();
-            
+
             return Ok(products);
 
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Product>> GetProductById(int id)
+        {
+            var product = await _productService.GetProductAsync(id);
+            return Ok(product);
         }
     }
 }
