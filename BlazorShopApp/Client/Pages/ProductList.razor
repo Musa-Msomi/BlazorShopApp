@@ -16,8 +16,8 @@
                 <a href="#">
                     <h4 class="mb-0">@product.Title</h4>
                 </a>
-                    <p>@product.Description</p>
-                    <h5 class="price">$@product.Price</h5>
+                <p>@product.Description</p>
+                <h5 class="price">$@product.Price</h5>
             </div>
         </li>
     }
@@ -28,14 +28,14 @@
     protected override async Task OnInitializedAsync()
     {
 
-        var result = await http.GetFromJsonAsync<List<Product>>("api/Products");
+        var result = await http.GetFromJsonAsync<ServiceResponse<List<Product>>>("api/Products");
 
-        if(result is not null)
+        if (result is not null && result.Data is not null)
         {
-            Products = result;
+            Products = result.Data;
         }
 
-        
+
     }
 }
 

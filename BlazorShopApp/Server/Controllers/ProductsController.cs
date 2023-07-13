@@ -1,4 +1,5 @@
 ﻿using BlazorShopApp.Server.Data;
+using BlazorShopApp.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,10 +18,14 @@ namespace BlazorShopApp.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetProducts()
+        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetProducts()
         {
             var products = await _dataContext.Products.ToListAsync();
-            return Ok(products);
+            var response = new ServiceResponse<List<Product>>()
+            {
+                Data = products
+            };
+            return Ok(response);
 
         }
     }
