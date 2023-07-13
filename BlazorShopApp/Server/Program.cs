@@ -1,4 +1,5 @@
 using BlazorShopApp.Server.Data;
+using BlazorShopApp.Server.Services.CategoryService;
 using BlazorShopApp.Server.Services.ProductService;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 // DI Registrations
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 var app = builder.Build();
 
 app.UseSwaggerUI();
