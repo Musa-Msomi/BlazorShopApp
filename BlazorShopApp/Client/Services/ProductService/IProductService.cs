@@ -1,7 +1,10 @@
-﻿namespace BlazorShopApp.Client.Services.ProductService
+﻿using BlazorShopApp.Shared;
+
+namespace BlazorShopApp.Client.Services.ProductService
 {
     public interface IProductService
     {
+        List<Product> Products { get; set; }
         Task GetProducts();
     }
 }

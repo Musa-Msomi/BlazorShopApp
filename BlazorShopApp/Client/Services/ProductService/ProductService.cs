@@ -12,7 +12,7 @@ namespace BlazorShopApp.Client.Services.ProductService
             _httpClient = httpClient;
         }
 
-        List<Product> Products { get; set; } = new List<Product>();
+        public List<Product> Products { get; set; } = new List<Product>();
 
         public async Task GetProducts()
         {
