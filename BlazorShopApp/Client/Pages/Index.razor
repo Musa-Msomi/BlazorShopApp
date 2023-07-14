@@ -1,18 +1,30 @@
 ﻿@page "/"
+@page "/search/{searchText}"
 @page "/{categoryUrl}"
 @using BlazorShopApp.Client.Services.ProductService
 @inject IProductService ProductService
 
 <PageTitle>Index</PageTitle>
 
-<ProductList/>
+<ProductList />
 
-@code{
+@code {
     [Parameter]
     public string? CategoryUrl { get; set; } = null;
+
+    [Parameter]
+    public string? SearchText { get; set; } = null;
     // adding lifecycle method
     protected override async Task OnParametersSetAsync()
     {
-        await ProductService.GetProducts(CategoryUrl);
+        if (SearchText is not null)
+        {
+            await ProductService.SearchProducts(SearchText);
+        }
+        else
+        {
+            await ProductService.GetProducts(CategoryUrl);
+        }
+
     }
 }
