@@ -18,8 +18,8 @@ namespace BlazorShopApp.Server.Services.ProductService
             var response = new ServiceResponse<Product>();
             var product = await _dataContext.Products
                 .Include(x => x.Variants)
-                .ThenInclude(x=> x.ProductType)
-                .FirstOrDefaultAsync(x=> x.Id == productId);
+                .ThenInclude(x => x.ProductType)
+                .FirstOrDefaultAsync(x => x.Id == productId);
 
             if (product is null)
             {
@@ -54,6 +54,21 @@ namespace BlazorShopApp.Server.Services.ProductService
                 .Where(x => x.Category.Url.ToLower() == url.ToLower())
                 .Include(_ => _.Variants)
                 .ToListAsync()
+            };
+
+            return response;
+        }
+
+        public async Task<ServiceResponse<List<Product>>> SearchProducts(string searchText)
+        {
+            // search description and title of product for matching searchText
+            var response = new ServiceResponse<List<Product>>
+            {
+                Data = await _dataContext.Products
+                .Where(x => x.Title.ToLower().Contains(searchText.ToLower()) || x.Description.ToLower().Contains(searchText.ToLower()))
+                .Include(_ => _.Variants)
+                .ToListAsync()
+
             };
 
             return response;
