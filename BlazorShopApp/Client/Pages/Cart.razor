@@ -1,0 +1,55 @@
+﻿@page "/cart"
+@using BlazorShopApp.Client.Services.CartService
+@using BlazorShopApp.Shared.DTO
+@inject ICartService CartService
+
+
+<PageTitle>Cart</PageTitle>
+<h3>Your Cart</h3>
+@if (cartProducts is null || cartProducts.Count == 0)
+{
+    <span>@message</span>
+}
+else
+{
+    <div>
+        @foreach (var product in cartProducts)
+        {
+            <div class="container">
+                <div class="image-wrapper">
+                    <img src="@product.ImageUrl" class="image" />
+                </div>
+                <div class="name">
+                    <h5><a href="/product/@product.ProductId">@product.Title</a></h5>
+                    <span>@product.ProductType</span>
+                </div>
+                <div class="cart-product-price">
+                    $@product.Price
+                </div>
+            </div>
+        }
+        <div class="cart-product-price">
+            Total (@cartProducts.Count): $@cartProducts.Sum(x => @x.Price)
+        </div>
+    </div>
+}
+@code {
+    List<CartProductDTO> cartProducts = null;
+    string message = "Loading cart...";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var itemsInCart = await CartService.GetAllCartItems();
+
+        if (itemsInCart.Count == 0)
+        {
+            message = "Your cart is empty";
+            cartProducts = new List<CartProductDTO>();
+        }
+        else
+        {
+            cartProducts = await CartService.GetCartProducts();
+        }
+    }
+
+}

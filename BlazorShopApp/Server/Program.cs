@@ -1,5 +1,6 @@
-using BlazorShopApp.Client.Services.CartService;
+
 using BlazorShopApp.Server.Data;
+using BlazorShopApp.Server.Services.CartService;
 using BlazorShopApp.Server.Services.CategoryService;
 using BlazorShopApp.Server.Services.ProductService;
 using Microsoft.AspNetCore.ResponseCompression;

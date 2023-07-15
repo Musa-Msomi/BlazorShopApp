@@ -1,4 +1,5 @@
 ﻿using BlazorShopApp.Shared;
+using BlazorShopApp.Shared.DTO;
 
 namespace BlazorShopApp.Client.Services.CartService
 {
@@ -7,5 +8,6 @@ namespace BlazorShopApp.Client.Services.CartService
         event Action OnChange;
         Task AddToCart(CartItem cartItem);
         Task<List<CartItem>> GetAllCartItems();
+        Task<List<CartProductDTO>> GetCartProducts();
     }
 }
