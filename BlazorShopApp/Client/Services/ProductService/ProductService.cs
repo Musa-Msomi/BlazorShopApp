@@ -58,6 +58,7 @@ namespace BlazorShopApp.Client.Services.ProductService
 
         public async Task SearchProducts(string searchText, int page)
         {
+            LastSearchText = searchText;
             var result = await _httpClient.GetFromJsonAsync<ServiceResponse<ProductSearchResultDTO>>($"api/products/search/{searchText}/{page}");
 
             if (result is not null && result.Data is not null)
