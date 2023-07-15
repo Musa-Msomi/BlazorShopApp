@@ -16,12 +16,12 @@ else
             {
                 <div class="featured-product">
                     <div>
-                        <a href="products/@product.Id">
+                        <a href="product/@product.Id">
                             <img src="@product.ImageUrl" />
                         </a>
                     </div>
                     <h4>
-                        <a href="products/@product.Id">@product.Title</a>
+                        <a href="product/@product.Id">@product.Title</a>
                     </h4>
                     @if (product.Variants is not null && product.Variants.Count > 0)
                     {
