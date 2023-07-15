@@ -26,7 +26,7 @@ namespace BlazorShopApp.Client.Services.ProductService
         public async Task GetProducts(string? categoryUrl = null)
         {
 
-            var result = categoryUrl == null ? await _httpClient.GetFromJsonAsync<ServiceResponse<List<Product>>>("api/products")
+            var result = categoryUrl == null ? await _httpClient.GetFromJsonAsync<ServiceResponse<List<Product>>>("api/products/featured")
                 : await _httpClient.GetFromJsonAsync<ServiceResponse<List<Product>>>($"api/products/categories/{categoryUrl}");
             if (result is not null && result.Data is not null)
             {

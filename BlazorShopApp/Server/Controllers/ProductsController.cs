@@ -28,6 +28,14 @@ namespace BlazorShopApp.Server.Controllers
             return Ok(products);
 
         }
+        [HttpGet("featured")]
+        public async Task<ActionResult<ServiceResponse<List<Product>>>> GetFeaturedProducts()
+        {
+            var products = await _productService.GetFeaturedProducts();
+
+            return Ok(products);
+
+        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProductById(int id)
