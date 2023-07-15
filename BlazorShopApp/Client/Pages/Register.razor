@@ -1,0 +1,29 @@
+﻿@page "/register"
+@using BlazorShopApp.Shared
+
+<PageTitle>Register</PageTitle>
+<h3>Register</h3>
+
+<EditForm Model="user" OnValidSubmit="HandleRegistration">
+    <div class="mb-3">
+        <label for="email">Email</label>
+        <InputText id="email" class="form-control" @bind-Value="user.Email" />
+    </div>
+    <div class="mb-3">
+        <label for="password">Enter Password</label>
+        <InputText type="password" id="password" class="form-control" @bind-Value="user.Password" />
+    </div>
+    <div class="mb-3">
+        <label for="confirmPassword">Confirm Password</label>
+        <InputText type="password" id="confirmPassword" class="form-control" @bind-Value="user.ConfirmPassword" />
+    </div>
+</EditForm>
+
+@code {
+    UserRegister user = new UserRegister();
+
+    public void HandleRegistration()
+    {
+        Console.WriteLine($"Register user with the email {user.Email}");
+    }
+}
