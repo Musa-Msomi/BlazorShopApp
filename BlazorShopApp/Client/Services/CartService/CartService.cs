@@ -25,7 +25,17 @@ namespace BlazorShopApp.Client.Services.CartService
             {
                 cart = new List<CartItem>();
             }
-            cart.Add(cartItem);
+            // checking if same item is being added and increasing quantity. i.e buying two of the same product
+            var sameItem = cart.Find(x => x.ProductId == cartItem.ProductId && x.ProductTypeId == cartItem.ProductTypeId);
+            if (sameItem is null)
+            {
+                cart.Add(cartItem);
+            }
+            else
+            {
+                sameItem.Quantity += cartItem.Quantity;
+            }
+
 
             await _localStorageService.SetItemAsync("cart", cart);
             OnChange.Invoke();
@@ -70,6 +80,26 @@ namespace BlazorShopApp.Client.Services.CartService
                 OnChange.Invoke();
             }
 
+        }
+
+        public async Task UpdateQuantity(CartProductDTO cartProduct)
+        {
+            var cartItems = await _localStorageService.GetItemAsync<List<CartItem>>("cart");
+
+            if (cartItems is null)
+            {
+                return;
+            }
+
+            var cartItem = cartItems.Find(x => x.ProductId == cartProduct.ProductId && x.ProductTypeId == cartProduct.ProductTypeId);
+
+            if (cartItem is not null)
+            {
+                cartItem.Quantity = cartProduct.Quantity;
+                // save remaining items to local storage again
+                await _localStorageService.SetItemAsync("cart", cartItems);
+
+            }
         }
     }
 }
