@@ -50,5 +50,26 @@ namespace BlazorShopApp.Client.Services.CartService
             return cartProducts.Data;
 
         }
+
+        public async Task RemoveProductFromCart(int productId, int productTypeId)
+        {
+            var cartItems = await _localStorageService.GetItemAsync<List<CartItem>>("cart");
+
+            if (cartItems is null)
+            {
+                return;
+            }
+
+            var cartItem = cartItems.Find(x => x.ProductId == productId && x.ProductTypeId == productTypeId);
+
+            if (cartItem is not null)
+            {
+                cartItems.Remove(cartItem);
+                // save remaining items to local storage again
+                await _localStorageService.SetItemAsync("cart", cartItems);
+                OnChange.Invoke();
+            }
+
+        }
     }
 }

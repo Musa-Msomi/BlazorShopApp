@@ -9,5 +9,6 @@ namespace BlazorShopApp.Client.Services.CartService
         Task AddToCart(CartItem cartItem);
         Task<List<CartItem>> GetAllCartItems();
         Task<List<CartProductDTO>> GetCartProducts();
+        Task RemoveProductFromCart(int productId, int productTypeId);
     }
 }
