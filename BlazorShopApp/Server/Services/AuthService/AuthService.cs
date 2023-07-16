@@ -24,18 +24,16 @@ namespace BlazorShopApp.Server.Services.AuthService
         {
             var response = new ServiceResponse<string>();
             var user = await _dataContext.Users.FirstOrDefaultAsync(x => x.Email.ToLower() == email.ToLower());
-            var passwordMatches = VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt);
-
 
             if (user is null)
             {
                 response.Success = false;
-                response.Message = "User not found";
+                response.Message = "Incorrect username or password";
             }
-            else if (!passwordMatches)
+            else if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             {
                 response.Success = false;
-                response.Message = "Wrong password";
+                response.Message = "Incorrect username or password";
             }
             else
             {
