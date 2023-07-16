@@ -1,6 +1,7 @@
 ﻿using BlazorShopApp.Server.Data;
 using BlazorShopApp.Shared;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
 
 namespace BlazorShopApp.Server.Services.AuthService
 {
@@ -13,9 +14,23 @@ namespace BlazorShopApp.Server.Services.AuthService
             _dataContext = dataContext;
         }
 
-        public Task<ServiceResponse<int>> Register(User user, string password)
+        public async Task<ServiceResponse<int>> Register(User user, string password)
         {
-            throw new NotImplementedException();
+            var userExists = await UserExists(user.Email);
+            if (userExists)
+            {
+                return new ServiceResponse<int> { Success = false, Message = "User already exists" };
+            }
+
+            // hashing
+            CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
+
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+
+            _dataContext.Users.Add(user);
+
+            await _dataContext.SaveChangesAsync();
         }
 
         public async Task<bool> UserExists(string email)
@@ -29,6 +44,15 @@ namespace BlazorShopApp.Server.Services.AuthService
             else
             {
                 return false;
+            }
+        }
+
+        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        {
+            using (var hmac = new HMACSHA512())
+            {
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
         }
     }
