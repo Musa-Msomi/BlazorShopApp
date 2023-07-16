@@ -1,4 +1,6 @@
 ﻿@page "/register"
+@inject IAuthService AuthService
+@using BlazorShopApp.Client.Services.AuthService
 @using BlazorShopApp.Shared
 
 <PageTitle>Register</PageTitle>
@@ -22,13 +24,27 @@
         <ValidationMessage For="@(()=> user.ConfirmPassword)"/>
     </div>
     <button type="submit" class="btn btn-primary">Register</button>
+    <div class = "text-danger">
+        <span>@errorMessage</span>
+    </div>
 </EditForm>
 
 @code {
     UserRegister user = new UserRegister();
 
-    public void HandleRegistration()
+    string errorMessage = string.Empty;
+
+    public async Task HandleRegistration()
     {
-        Console.WriteLine($"Register user with the email {user.Email}");
+        var result = await AuthService.Register(user);
+        if (!result.Success)
+        {
+            errorMessage = result.Message;
+        }
+        else
+        {
+            errorMessage = string.Empty;
+        }
+
     }
 }
