@@ -1,5 +1,6 @@
 
 using BlazorShopApp.Server.Data;
+using BlazorShopApp.Server.Services.AuthService;
 using BlazorShopApp.Server.Services.CartService;
 using BlazorShopApp.Server.Services.CategoryService;
 using BlazorShopApp.Server.Services.ProductService;
@@ -21,6 +22,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 var app = builder.Build();
 
 app.UseSwaggerUI();
