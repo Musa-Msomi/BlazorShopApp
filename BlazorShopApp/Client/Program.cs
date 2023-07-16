@@ -1,5 +1,6 @@
 using Blazored.LocalStorage;
 using BlazorShopApp.Client;
+using BlazorShopApp.Client.Services.AuthService;
 using BlazorShopApp.Client.Services.CartService;
 using BlazorShopApp.Client.Services.CategoryService;
 using BlazorShopApp.Client.Services.ProductService;
@@ -16,5 +17,6 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 await builder.Build().RunAsync();
