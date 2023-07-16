@@ -1,6 +1,9 @@
 ﻿using BlazorShopApp.Server.Data;
 using BlazorShopApp.Shared;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 
 namespace BlazorShopApp.Server.Services.AuthService
@@ -8,10 +11,13 @@ namespace BlazorShopApp.Server.Services.AuthService
     public class AuthService : IAuthService
     {
         private readonly DataContext _dataContext;
+        private readonly IConfiguration _config;
 
-        public AuthService(DataContext dataContext)
+
+        public AuthService(DataContext dataContext, IConfiguration config)
         {
             _dataContext = dataContext;
+            _config = config;
         }
 
         public async Task<ServiceResponse<string>> Login(string email, string password)
@@ -19,6 +25,7 @@ namespace BlazorShopApp.Server.Services.AuthService
             var response = new ServiceResponse<string>();
             var user = await _dataContext.Users.FirstOrDefaultAsync(x => x.Email.ToLower() == email.ToLower());
             var passwordMatches = VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt);
+
 
             if (user is null)
             {
@@ -32,11 +39,37 @@ namespace BlazorShopApp.Server.Services.AuthService
             }
             else
             {
-                response.Data = "token";
+                response.Data = CreateToken(user);
             }
 
 
             return response;
+        }
+
+        private string CreateToken(User user)
+        {
+            List<Claim> claims = new()
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Email.ToLower()),
+            };
+
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
+
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(
+
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: credentials
+
+                );
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwt;
+
         }
 
         public async Task<ServiceResponse<int>> Register(User user, string password)
