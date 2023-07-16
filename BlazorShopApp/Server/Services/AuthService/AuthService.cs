@@ -16,10 +16,26 @@ namespace BlazorShopApp.Server.Services.AuthService
 
         public async Task<ServiceResponse<string>> Login(string email, string password)
         {
-            var response = new ServiceResponse<string>()
+            var response = new ServiceResponse<string>();
+            var user = await _dataContext.Users.FirstOrDefaultAsync(x => x.Email.ToLower() == email.ToLower());
+            var passwordMatches = VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt);
+
+            if (user is null)
             {
-                Data = "token"
-            };
+                response.Success = false;
+                response.Message = "User not found";
+            }
+            else if (!passwordMatches)
+            {
+                response.Success = false;
+                response.Message = "Wrong password";
+            }
+            else
+            {
+                response.Data = "token";
+            }
+
+
             return response;
         }
 
@@ -41,7 +57,7 @@ namespace BlazorShopApp.Server.Services.AuthService
 
             await _dataContext.SaveChangesAsync();
 
-            return new ServiceResponse<int> { Data = user.Id , Message="Account registration succesful"};
+            return new ServiceResponse<int> { Data = user.Id, Message = "Account registration succesful" };
         }
 
         public async Task<bool> UserExists(string email)
@@ -65,6 +81,17 @@ namespace BlazorShopApp.Server.Services.AuthService
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
+        }
+
+        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        {
+            using (var hmac = new HMACSHA512(passwordSalt))
+            {
+                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+
+                return computedHash.SequenceEqual(passwordHash);
+            }
+
         }
     }
 }
