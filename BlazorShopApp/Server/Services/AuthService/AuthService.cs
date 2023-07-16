@@ -31,6 +31,8 @@ namespace BlazorShopApp.Server.Services.AuthService
             _dataContext.Users.Add(user);
 
             await _dataContext.SaveChangesAsync();
+
+            return new ServiceResponse<int> { Data = user.Id };
         }
 
         public async Task<bool> UserExists(string email)
