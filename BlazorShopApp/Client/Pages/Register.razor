@@ -9,17 +9,19 @@
     <div class="mb-3">
         <label for="email">Email</label>
         <InputText id="email" class="form-control" @bind-Value="user.Email" />
+        <ValidationMessage For="@(()=> user.Email)"/>
     </div>
     <div class="mb-3">
         <label for="password">Enter Password</label>
         <InputText type="password" id="password" class="form-control" @bind-Value="user.Password" />
+        <ValidationMessage For="@(()=> user.Password)"/>
     </div>
     <div class="mb-3">
         <label for="confirmPassword">Confirm Password</label>
         <InputText type="password" id="confirmPassword" class="form-control" @bind-Value="user.ConfirmPassword" />
+        <ValidationMessage For="@(()=> user.ConfirmPassword)"/>
     </div>
     <button type="submit" class="btn btn-primary">Register</button>
-    <ValidationSummary/>
 </EditForm>
 
 @code {
