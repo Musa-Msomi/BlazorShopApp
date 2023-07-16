@@ -24,12 +24,12 @@ namespace BlazorShopApp.Client
             var identity = new ClaimsIdentity();
             _httpClient.DefaultRequestHeaders.Authorization = null;
 
-            if (string.IsNullOrEmpty(authToken))
+            if (!string.IsNullOrEmpty(authToken))
             {
                 try
                 {
                     identity = new ClaimsIdentity(ParseClaimsFromJwt(authToken), "jwt");
-                    _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer ", authToken.Replace("\"", ""));
+                    _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken.Replace("\"", ""));
 
                 }
                 catch

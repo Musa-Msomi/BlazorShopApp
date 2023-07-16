@@ -2,9 +2,11 @@
 @inject IAuthService AuthService
 @inject ILocalStorageService LocalStorage
 @inject NavigationManager NavManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @using BlazorShopApp.Client.Services.AuthService
 @using BlazorShopApp.Shared
 @using Blazored.LocalStorage
+@using Microsoft.AspNetCore.Components.Authorization
 <PageTitle>Login</PageTitle>
 
 <EditForm Model="user" OnValidSubmit="HandleLogin">
@@ -35,6 +37,7 @@
         {
             errorMessage = string.Empty;
             await LocalStorage.SetItemAsync("authToken", result.Data);
+            await AuthenticationStateProvider.GetAuthenticationStateAsync();
             NavManager.NavigateTo("");
         }
         else
