@@ -32,7 +32,7 @@ namespace BlazorShopApp.Server.Services.AuthService
 
             await _dataContext.SaveChangesAsync();
 
-            return new ServiceResponse<int> { Data = user.Id };
+            return new ServiceResponse<int> { Data = user.Id , Message="Account registration succesful"};
         }
 
         public async Task<bool> UserExists(string email)
