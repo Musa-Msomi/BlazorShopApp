@@ -124,5 +124,26 @@ namespace BlazorShopApp.Server.Services.AuthService
             }
 
         }
+
+        public async Task<ServiceResponse<bool>> ChangePassword(int userId, string newPassword)
+        {
+            var user = await _dataContext.Users.FindAsync(userId);
+            if (user is null)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Success = false,
+                    Message = "User not found"
+                };
+            }
+            CreatePasswordHash(newPassword, out byte[] passwordHash, out byte[] passwordSalt);
+
+            user.PasswordSalt = passwordSalt;
+            user.PasswordHash = passwordHash;
+
+            await _dataContext.SaveChangesAsync();
+
+            return new ServiceResponse<bool> { Data = true, Message = "Password successfully changed" };
+        }
     }
 }
