@@ -1,6 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using BlazorShopApp.Shared;
 using BlazorShopApp.Shared.DTO;
+using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http.Json;
 
 namespace BlazorShopApp.Client.Services.CartService
@@ -9,17 +10,26 @@ namespace BlazorShopApp.Client.Services.CartService
     {
         private readonly ILocalStorageService _localStorageService;
         private readonly HttpClient _httpClient;
+        private readonly AuthenticationStateProvider _provider;
 
-        public CartService(ILocalStorageService localStorageService, HttpClient httpClient)
+        public CartService(ILocalStorageService localStorageService, HttpClient httpClient, AuthenticationStateProvider provider)
         {
             _localStorageService = localStorageService;
             _httpClient = httpClient;
+            _provider = provider;
         }
 
         public event Action OnChange;
 
         public async Task AddToCart(CartItem cartItem)
         {
+            if((await _provider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated)
+            {
+                Console.WriteLine("User authenticated");
+            } else
+            {
+                Console.WriteLine("User is not authenticated");
+            }
             var cart = await _localStorageService.GetItemAsync<List<CartItem>>("cart");
             if (cart is null)
             {
