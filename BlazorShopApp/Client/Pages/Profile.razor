@@ -1,4 +1,6 @@
 ﻿@page "/profile"
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 <AuthorizeView>
     <h3>Hi! You're logged in with <i>@context.User.Identity.Name</i></h3>
