@@ -11,5 +11,6 @@ namespace BlazorShopApp.Client.Services.CartService
         Task<List<CartProductDTO>> GetCartProducts();
         Task RemoveProductFromCart(int productId, int productTypeId);
         Task UpdateQuantity(CartProductDTO cartProduct);
+        Task StoreCartItems(bool emptyLocalCart);
     }
 }

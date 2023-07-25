@@ -1,9 +1,11 @@
 ﻿@page "/login"
 @inject IAuthService AuthService
 @inject ILocalStorageService LocalStorage
+@inject ICartService CartService
 @inject NavigationManager NavManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @using BlazorShopApp.Client.Services.AuthService
+@using BlazorShopApp.Client.Services.CartService
 @using BlazorShopApp.Shared
 @using Blazored.LocalStorage
 @using Microsoft.AspNetCore.Components.Authorization
@@ -49,6 +51,7 @@
             errorMessage = string.Empty;
             await LocalStorage.SetItemAsync("authToken", result.Data);
             await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            await CartService.StoreCartItems(true);
             NavManager.NavigateTo(returnUrl);
         }
         else

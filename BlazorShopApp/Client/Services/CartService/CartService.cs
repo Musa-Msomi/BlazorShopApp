@@ -23,10 +23,11 @@ namespace BlazorShopApp.Client.Services.CartService
 
         public async Task AddToCart(CartItem cartItem)
         {
-            if((await _provider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated)
+            if ((await _provider.GetAuthenticationStateAsync()).User.Identity.IsAuthenticated)
             {
                 Console.WriteLine("User authenticated");
-            } else
+            }
+            else
             {
                 Console.WriteLine("User is not authenticated");
             }
@@ -88,6 +89,23 @@ namespace BlazorShopApp.Client.Services.CartService
                 // save remaining items to local storage again
                 await _localStorageService.SetItemAsync("cart", cartItems);
                 OnChange.Invoke();
+            }
+
+        }
+
+        public async Task StoreCartItems(bool emptyLocalCart = false)
+        {
+            var localCart = await _localStorageService.GetItemAsync<List<CartItem>>("cart");
+            if (localCart is null)
+            {
+                return;
+            }
+
+            await _httpClient.PostAsJsonAsync("api/cart", localCart);
+
+            if (emptyLocalCart)
+            {
+                await _localStorageService.RemoveItemAsync("cart");
             }
 
         }
