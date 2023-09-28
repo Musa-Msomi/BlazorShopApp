@@ -101,7 +101,7 @@ namespace BlazorShopApp.Client.Services.CartService
                 return;
             }
 
-            await _httpClient.PostAsJsonAsync("api/cart", localCart);
+            await _httpClient.PostAsJsonAsync("api/carts", localCart);
 
             if (emptyLocalCart)
             {
